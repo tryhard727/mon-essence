@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silicon | RTL Portfolio</title>
+    <meta name="description" content="Advanced RTL Design & Verification Portfolio">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="cpu-canvas"></div>
+    <div class="cursor"></div>
+
+    <header id="header">
+        <nav>
+            <div class="logo">SILICON</div>
+            <ul class="nav-links">
+                <li><a href="#hero">Start</a></li>
+                <li><a href="#about">Layer 01</a></li>
+                <li><a href="#skills">Stack</a></li>
+                <li><a href="#projects">Logic</a></li>
+                <li><a href="#contact">Terminal</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="hero-section">
+            <div class="container">
+                <span class="section-tag" style="opacity: 0; transform: translateY(20px);">Version 1.0.0</span>
+                <h1 id="title-main" style="opacity: 0; transform: translateY(30px);">
+                    Architecting<br>
+                    <span class="gradient-text">Future Logic</span>
+                </h1>
+                <p class="sub-text" style="opacity: 0; transform: translateY(40px);">
+                    Step into the microscopic world of RTL Design and Verification.
+                    Scroll to deconstruct the architecture.
+                </p>
+            </div>
+            <div class="scroll-hint">SCROLL TO ANALYZE</div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <div class="glass-content">
+                    <span class="section-tag">SUBSTRATE</span>
+                    <h2>Foundational Engineering</h2>
+                    <p class="sub-text">
+                        Every great design starts with a solid foundation. My background in VLSI synthesis
+                        ensures that high-level abstractions translate into efficient, power-aware silicon realities.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="container">
+                <span class="section-tag">THE STACK</span>
+                <h2>Modular Expertise</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <span class="section-tag">HDL</span>
+                        <h3>Design Phase</h3>
+                        <p>Verilog, SystemVerilog, RTL Synthesis</p>
+                    </div>
+                    <div class="skill-card">
+                        <span class="section-tag">UVM</span>
+                        <h3>Verification</h3>
+                        <p>Functional Coverage, Constrained Random, Scoreboarding</p>
+                    </div>
+                    <div class="skill-card">
+                        <span class="section-tag">EDA</span>
+                        <h3>Industry Tools</h3>
+                        <p>QuestaSim, Vivado, Genus, Innovus</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="container">
+                <span class="section-tag">LOGIC CORES</span>
+                <h2>Silicon Workloads</h2>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>RISC-V 32I Core</h3>
+                        <p class="sub-text">A full implementation of the base integer instruction set with a 5-stage
+                            pipeline.</p>
+                        <a href="#" class="btn">VIEW LOGS</a>
+                    </div>
+                    <div class="project-image"></div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-content">
+                        <h3>APB Subsystem</h3>
+                        <p class="sub-text">Protocol bridge design for high-performance peripheral interfacing.</p>
+                        <a href="#" class="btn">VIEW DOCS</a>
+                    </div>
+                    <div class="project-image"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container">
+                <div class="glass-content" style="text-align: center;">
+                    <span class="section-tag">TRANSMISSION</span>
+                    <h2>Ready to Build?</h2>
+                    <p class="sub-text">Initialize communication for collaboration or opportunities.</p>
+                    <a href="mailto:contact@example.com" class="btn">SEND SIGNAL</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
