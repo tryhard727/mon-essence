@@ -192,7 +192,74 @@ function initUI() {
     gsap.to(".sub-text", { opacity: 1, y: 0, duration: 1, delay: 0.9 });
 }
 
+// --- PIKABOT CHAT ---
+class Pikabot {
+    constructor() {
+        this.input = document.getElementById('chat-input');
+        this.submit = document.getElementById('chat-submit');
+        this.responseArea = document.getElementById('chat-response');
+        this.endpoint = 'https://muddy-wood-cf4f.klakshman616.workers.dev/ask';
+
+        if (this.input && this.submit) {
+            this.init();
+        }
+    }
+
+    init() {
+        this.submit.addEventListener('click', () => this.handleSendMessage());
+        this.input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.handleSendMessage();
+        });
+    }
+
+    async handleSendMessage() {
+        const question = this.input.value.trim();
+        if (!question) return;
+
+        // Reset and show loading
+        this.showResponse('Analyzing payload...', true);
+        this.input.value = '';
+        this.input.disabled = true;
+        this.submit.disabled = true;
+
+        try {
+            const response = await fetch(this.endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question })
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const data = await response.json();
+            // Assuming the response is in a field like 'answer' or just the object itself
+            // If the structure is unknown, I'll log it and try to find the text
+            const answer = data.answer || data.response || data.message || JSON.stringify(data);
+            this.showResponse(answer);
+        } catch (error) {
+            console.error('Pikabot Error:', error);
+            this.showResponse('Error: Signal lost. Please try again later.');
+        } finally {
+            this.input.disabled = false;
+            this.submit.disabled = false;
+            this.input.focus();
+        }
+    }
+
+    showResponse(text, isLoading = false) {
+        this.responseArea.textContent = text;
+        this.responseArea.classList.add('active');
+        if (isLoading) {
+            this.responseArea.classList.add('loading-dots');
+        } else {
+            this.responseArea.classList.remove('loading-dots');
+        }
+    }
+}
+
 window.addEventListener('load', () => {
     initUI();
     new CPU3D();
+    new Pikabot();
 });
+
