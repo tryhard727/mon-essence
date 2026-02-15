@@ -50,21 +50,16 @@ class CPU3D {
         this.cpuGroup = new THREE.Group();
         this.scene.add(this.cpuGroup);
 
-        // 1. Substrate (Green PCB)
+        // Substrate
         const subGeo = new THREE.BoxGeometry(3, 0.1, 3);
-        const subMat = new THREE.MeshStandardMaterial({
-            color: 0x052a1a,
-            roughness: 0.5,
-            metalness: 0.3
-        });
+        const subMat = new THREE.MeshStandardMaterial({ color: 0x052a1a, roughness: 0.5, metalness: 0.3 });
         this.parts.substrate = new THREE.Mesh(subGeo, subMat);
         this.cpuGroup.add(this.parts.substrate);
 
-        // 2. Pins (Bottom) - Grouping them
+        // Pins
         this.parts.pins = new THREE.Group();
         const pinGeo = new THREE.BoxGeometry(0.05, 0.1, 0.05);
         const pinMat = new THREE.MeshStandardMaterial({ color: 0xffaa00, metalness: 1, roughness: 0.1 });
-
         for (let i = -1.4; i <= 1.4; i += 0.25) {
             for (let j = -1.4; j <= 1.4; j += 0.25) {
                 if (Math.abs(i) < 0.5 && Math.abs(j) < 0.5) continue;
@@ -75,23 +70,15 @@ class CPU3D {
         }
         this.cpuGroup.add(this.parts.pins);
 
-        // 3. Die (Silicon)
+        // Die
         const dieGeo = new THREE.BoxGeometry(0.9, 0.05, 0.9);
-        const dieMat = new THREE.MeshStandardMaterial({
-            color: 0x111111,
-            metalness: 1,
-            roughness: 0,
-            emissive: 0x00f2ff,
-            emissiveIntensity: 0.5
-        });
+        const dieMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 1, roughness: 0, emissive: 0x00f2ff, emissiveIntensity: 0.5 });
         this.parts.die = new THREE.Mesh(dieGeo, dieMat);
         this.parts.die.position.y = 0.1;
         this.cpuGroup.add(this.parts.die);
 
-        // 4. IHS (Heat Spreader)
+        // IHS
         const ihsGeo = new THREE.BoxGeometry(2.1, 0.2, 2.1);
-
-        // Canvas for IHS Texture
         const canvas = document.createElement('canvas');
         canvas.width = 512; canvas.height = 512;
         const ctx = canvas.getContext('2d');
@@ -108,16 +95,12 @@ class CPU3D {
         ctx.fillText('REV 2.0.4', 256, 300);
 
         const tex = new THREE.CanvasTexture(canvas);
-        const ihsMat = new THREE.MeshStandardMaterial({
-            map: tex,
-            metalness: 0.8,
-            roughness: 0.2
-        });
+        const ihsMat = new THREE.MeshStandardMaterial({ map: tex, metalness: 0.8, roughness: 0.2 });
         this.parts.ihs = new THREE.Mesh(ihsGeo, ihsMat);
         this.parts.ihs.position.y = 0.25;
         this.cpuGroup.add(this.parts.ihs);
 
-        // 5. Capacitors (Top of Substrate)
+        // Caps
         this.parts.caps = new THREE.Group();
         const capGeo = new THREE.BoxGeometry(0.2, 0.15, 0.2);
         const capMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
@@ -131,9 +114,7 @@ class CPU3D {
     }
 
     setupScrollAnimations() {
-        // Initial state
         gsap.set(this.cpuGroup.rotation, { x: 0.5, y: -0.5 });
-
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: "body",
@@ -142,21 +123,13 @@ class CPU3D {
                 scrub: 1,
             }
         });
-
-        // Rotation across the whole site
         tl.to(this.cpuGroup.rotation, { y: Math.PI * 2, x: 0.2 }, 0);
-
-        // Deconstruction
         tl.to(this.parts.ihs.position, { y: 3, opacity: 0 }, 0.1);
         tl.to(this.parts.die.position, { y: 1.5, scale: 1.5 }, 0.2);
         tl.to(this.parts.substrate.position, { y: -1 }, 0.3);
         tl.to(this.parts.pins.position, { y: -3 }, 0.4);
         tl.to(this.parts.caps.position, { y: 2, x: (i) => i % 2 === 0 ? 3 : -3 }, 0.35);
-
-        // Camera move closer as we go to projects
         tl.to(this.camera.position, { z: 4, y: 0 }, 0.6);
-
-        // Re-assemble slightly at the end
         tl.to(this.parts.die.position, { y: 0.2, scale: 1 }, 0.9);
     }
 
@@ -166,38 +139,12 @@ class CPU3D {
     }
 }
 
-// --- CURSOR AND UI ---
-function initUI() {
-    const cursor = document.querySelector('.cursor');
-    document.addEventListener('mousemove', (e) => {
-        gsap.to(cursor, {
-            x: e.clientX - 10,
-            y: e.clientY - 10,
-            duration: 0.1
-        });
-    });
-
-    const header = document.getElementById('header');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
-
-    // Animate Hero text
-    gsap.to(".hero-section .section-tag", { opacity: 1, y: 0, duration: 1, delay: 0.5 });
-    gsap.to("#title-main", { opacity: 1, y: 0, duration: 1, delay: 0.7 });
-    gsap.to(".sub-text", { opacity: 1, y: 0, duration: 1, delay: 0.9 });
-}
-
 // --- PIKABOT CHAT ---
 class Pikabot {
     constructor() {
         this.input = document.getElementById('chat-input');
         this.submit = document.getElementById('chat-submit');
-        this.responseArea = document.getElementById('chat-response');
+        this.responseArea = document.getElementById('chat-response-text');
         this.endpoint = 'https://muddy-wood-cf4f.klakshman616.workers.dev/ask';
 
         if (this.input && this.submit) {
@@ -216,46 +163,35 @@ class Pikabot {
         const questionText = this.input.value.trim();
         if (!questionText) return;
 
-        // Reset and show loading
-        this.showResponse('Connecting to Pikabot mesh...', true);
+        // Reset: Clear old response and show loading
+        this.showResponse('Intercepting signal...', true);
         this.input.value = '';
         this.input.disabled = true;
         this.submit.disabled = true;
 
         try {
-            // Updated to ensure we're sending a clean JSON object
             const response = await fetch(this.endpoint, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ "question": questionText })
             });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Server error:', errorText);
-                throw new Error(`Server returned ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-            // The worker might return a raw string or a JSON object
             const contentType = response.headers.get("content-type");
             let answer = "";
 
-            if (contentType && contentType.indexOf("application/json") !== -1) {
+            if (contentType && contentType.includes("application/json")) {
                 const data = await response.json();
-                // Check all common response keys
-                answer = data.answer || data.response || data.message || data.text || JSON.stringify(data);
+                answer = data.answer || data.response || data.message || JSON.stringify(data);
             } else {
-                // If it's not JSON, it might be raw text
                 answer = await response.text();
             }
 
             this.showResponse(answer);
         } catch (error) {
             console.error('Pikabot Error:', error);
-            // Provide a more descriptive error for debugging
-            this.showResponse('Signal lost: The worker failed to respond. Check if the URL is active or CORS is allowed.');
+            this.showResponse('Signal lost. The worker failed to respond.');
         } finally {
             this.input.disabled = false;
             this.submit.disabled = false;
@@ -264,8 +200,8 @@ class Pikabot {
     }
 
     showResponse(text, isLoading = false) {
+        // Clear previous and set new
         this.responseArea.textContent = text;
-        this.responseArea.classList.add('active');
         if (isLoading) {
             this.responseArea.classList.add('loading-dots');
         } else {
@@ -274,9 +210,29 @@ class Pikabot {
     }
 }
 
+// --- UI AND INITIALIZATION ---
+function initUI() {
+    const cursor = document.querySelector('.cursor');
+    document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX - 10, y: e.clientY - 10, duration: 0.1 });
+    });
+
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) header.classList.add('scrolled');
+        else header.classList.remove('scrolled');
+    });
+
+    // Landing Animations
+    const tl = gsap.timeline({ delay: 0.5 });
+    tl.to(".hero-section .section-tag", { opacity: 1, y: 0, duration: 1 })
+        .to("#title-main", { opacity: 1, y: 0, duration: 1 }, "-=0.7")
+        .to(".hero-section .sub-text", { opacity: 1, y: 0, duration: 1 }, "-=0.7")
+        .to("#pikabot-hero-chat", { opacity: 1, y: 0, duration: 1 }, "-=0.7");
+}
+
 window.addEventListener('load', () => {
     initUI();
     new CPU3D();
     new Pikabot();
 });
-
