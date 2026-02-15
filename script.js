@@ -213,32 +213,49 @@ class Pikabot {
     }
 
     async handleSendMessage() {
-        const question = this.input.value.trim();
-        if (!question) return;
+        const questionText = this.input.value.trim();
+        if (!questionText) return;
 
         // Reset and show loading
-        this.showResponse('Analyzing payload...', true);
+        this.showResponse('Connecting to Pikabot mesh...', true);
         this.input.value = '';
         this.input.disabled = true;
         this.submit.disabled = true;
 
         try {
+            // Updated to ensure we're sending a clean JSON object
             const response = await fetch(this.endpoint, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question })
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "question": questionText })
             });
 
-            if (!response.ok) throw new Error('Network response was not ok');
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Server error:', errorText);
+                throw new Error(`Server returned ${response.status}`);
+            }
 
-            const data = await response.json();
-            // Assuming the response is in a field like 'answer' or just the object itself
-            // If the structure is unknown, I'll log it and try to find the text
-            const answer = data.answer || data.response || data.message || JSON.stringify(data);
+            // The worker might return a raw string or a JSON object
+            const contentType = response.headers.get("content-type");
+            let answer = "";
+
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                const data = await response.json();
+                // Check all common response keys
+                answer = data.answer || data.response || data.message || data.text || JSON.stringify(data);
+            } else {
+                // If it's not JSON, it might be raw text
+                answer = await response.text();
+            }
+
             this.showResponse(answer);
         } catch (error) {
             console.error('Pikabot Error:', error);
-            this.showResponse('Error: Signal lost. Please try again later.');
+            // Provide a more descriptive error for debugging
+            this.showResponse('Signal lost: The worker failed to respond. Check if the URL is active or CORS is allowed.');
         } finally {
             this.input.disabled = false;
             this.submit.disabled = false;

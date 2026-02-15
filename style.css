@@ -293,12 +293,17 @@ h2 {
 }
 
 .pikabot-avatar {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid var(--accent-primary);
-    padding: 2px;
+    background: transparent;
+    border: none;
+    filter: drop-shadow(0 4px 10px rgba(0, 242, 255, 0.3));
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pikabot-avatar:hover {
+    transform: scale(1.1) rotate(5deg);
 }
 
 .pikabot-text {
@@ -372,15 +377,21 @@ h2 {
     background: white;
 }
 
+
 .chat-response {
-    font-size: 0.9rem;
-    color: var(--accent-primary);
-    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: #fff;
+    /* Changed to white for better readability */
+    font-family: var(--font-main);
+    /* Changed to main font for less-robotic feel */
     min-height: 1.2rem;
     opacity: 0;
     transform: translateY(-10px);
     transition: all 0.3s ease;
+    border-left: 2px solid var(--accent-primary);
+    padding-left: 10px;
 }
+
 
 .chat-response.active {
     opacity: 1;
